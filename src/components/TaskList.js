@@ -1,6 +1,7 @@
 import { useIsFocused } from "@react-navigation/native"
+import { MotiView, View } from "moti"
 import React, { useState } from "react"
-import { FlatList, RefreshControl, TextInput, View } from "react-native"
+import { Dimensions, FlatList, RefreshControl, TextInput } from "react-native"
 import { deleteTask } from "../../api"
 import useTasks from "../hooks/useTasks"
 import TaskItem from "./TaskItem"
@@ -29,8 +30,16 @@ export default function TaskList() {
     await loadTasks()
   }
 
-  const renderItem = ({ item }) => {
-    return <TaskItem task={item} handleDelete={handleDelete} />
+  const renderItem = ({ item, index }) => {
+    return (
+      <MotiView
+        from={{ opacity: 1 }}
+        animate={{ opacity: item.isDeleting ? 0 : 1 }}
+        transition={{ duration: 300 }}
+      >
+        <TaskItem task={item} handleDelete={handleDelete} />
+      </MotiView>
+    )
   }
 
   const onRefresh = React.useCallback(async () => {
@@ -41,17 +50,27 @@ export default function TaskList() {
 
   return (
     <View className="w-full flex-1 items-center gap-4">
-      <TextInput
-        className="w-40 rounded-lg bg-white p-2"
-        placeholder="Buscar"
-        value={searchTerm}
-        onChangeText={handleSearchRealTime} // Utiliza handleSearchRealTime para búsqueda en tiempo real
-      />
+      <MotiView transition={{ duration: 600 }}>
+        <TextInput
+          className="w-40 rounded-lg bg-white p-2"
+          placeholder="Buscar"
+          value={searchTerm}
+          onChangeText={handleSearchRealTime}
+        />
+      </MotiView>
       <FlatList
-        className="w-full"
+        style={{ width: Dimensions.get("window").width / 1 - 20 }}
         data={tasks}
         keyExtractor={(item) => item.id}
-        renderItem={renderItem}
+        renderItem={({ item, index }) => (
+          <MotiView
+            from={{ opacity: 0, translateY: 50 }}
+            animate={{ opacity: 1, translateY: 0 }}
+            transition={{ delay: 20 + index * 100 }} // Usar index para aplicar el retraso
+          >
+            <TaskItem task={item} handleDelete={handleDelete} />
+          </MotiView>
+        )}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
       />
     </View>
