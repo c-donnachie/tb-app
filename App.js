@@ -5,7 +5,9 @@ import { Text, TouchableOpacity } from "react-native"
 
 // Screens
 import HomeScreen from "./src/screens/HomeScreen"
+import SalesScreen from "./src/screens/SalesScreen"
 import TaskFormScreen from "./src/screens/TaskFormScreen"
+// import VentasScreen from "./src/screens/VentasScreen"
 
 const Stack = createStackNavigator()
 
@@ -13,6 +15,11 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
+        <Stack.Screen
+          name="VentasScreen"
+          component={SalesScreen}
+          options={{ headerShown: false }}
+        />
         <Stack.Screen
           name="HomeScreen"
           component={HomeScreen}
