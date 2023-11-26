@@ -1,12 +1,45 @@
-import React, { useState } from "react"
-import { SafeAreaView, StyleSheet, Text, View } from "react-native"
+import { motify } from "moti"
+import React, { useEffect, useState } from "react"
+import { SafeAreaView, View } from "react-native"
 import Categories from "../components/Categories"
 import LayoutFull from "../components/LayoutFull"
-import QuadratureCard from "../components/Sales/QuadratureCard"
+import OpeningList from "../components/Sales/OpeningList"
 import TotalCard from "../components/Sales/TotalCard"
 import Search from "../components/Search"
 
+const MotiView = motify(View)()
+
 export default function SalesScreen() {
+  const [selectedCategory, setSelectedCategory] = useState(null)
+  const [searchTerm, setSearchTerm] = useState("")
+  const [sizeScreen, setSizeScreen] = useState("24%")
+  const [layoutFullKey, setLayoutFullKey] = useState(0)
+
+  const handleSearchRealTime = (text) => {
+    setSearchTerm(text)
+  }
+
+  ventas = [
+    {
+      id: 1,
+      name: "Total ventas",
+      value: "50.434.430K",
+      icon: require("../assets/icons/money1.png"),
+    },
+    {
+      id: 2,
+      name: "Total entregas",
+      value: "32.452K",
+      icon: require("../assets/icons/money2.png"),
+    },
+    {
+      id: 3,
+      name: "T. diferencia",
+      value: "-23.450",
+      icon: require("../assets/icons/money3.png"),
+    },
+  ]
+
   const categorias = [
     {
       id: 1,
@@ -30,70 +63,81 @@ export default function SalesScreen() {
     },
   ]
 
-  const [categoriaSeleccionada, setCategoriaSeleccionada] = useState(null)
-
   const handleCategorySelect = (category) => {
-    setCategoriaSeleccionada(category)
+    setSelectedCategory(category)
   }
+
+  // useEffect para cargar la categoría inicial al inicializar la aplicación
+  useEffect(() => {
+    if (!selectedCategory) {
+      // Si no hay ninguna categoría seleccionada, establece la primera categoría
+      setSelectedCategory(categorias[0])
+    }
+  }, [selectedCategory, categorias])
+
+  const imagePaths = {
+    1: { path: require("../assets/icons/money1.png"), width: 37, height: 37 },
+    2: { path: require("../assets/icons/money2.png"), width: 37, height: 37 },
+    3: { path: require("../assets/icons/money3.png"), width: 36.11, height: 32.5 },
+  }
+
+  const ChangeScreen = () => {
+    if (sizeScreen === "24%") {
+      setSizeScreen("8%")
+      console.log("17")
+    } else {
+      setSizeScreen("24%")
+      console.log("24")
+    }
+
+    setLayoutFullKey((prevKey) => prevKey + 1)
+  }
+
   return (
     <View>
       <LayoutFull
-        height={280}
+        height={sizeScreen}
+        sizeButton={ChangeScreen}
         firstChild={
           <SafeAreaView>
-            <View className="mt-3 flex flex-row items-center justify-evenly py-4">
-              <TotalCard
-                name={"Total ventas"}
-                total={"50.434.430K"}
-                urlIcon={require("../assets/icons/money1.png")}
-                iconSizeW={36.11}
-                iconSizeH={32.5}
+            <MotiView transition={{ duration: 100 }}>
+              <View
+                className={`mt-1 flex flex-row items-center justify-evenly py-4 ${
+                  sizeScreen === "8%" ? "mt-20" : ""
+                }`}
+              >
+                {ventas.map((item) => {
+                  return (
+                    <View key={item.id}>
+                      <TotalCard
+                        name={item.name}
+                        total={item.value}
+                        urlIcon={imagePaths[item.id].path}
+                        iconSizeW={imagePaths[item.id].width}
+                        iconSizeH={imagePaths[item.id].height}
+                      />
+                    </View>
+                  )
+                })}
+              </View>
+              <Search
+                search="Buscar local..."
+                urlImage={require("../assets/icons/optionsIcon.png")}
+                icon={true}
+                value={searchTerm}
+                onChangeText={handleSearchRealTime}
               />
-              <TotalCard
-                name={"Total entregas"}
-                total={"32.452K"}
-                urlIcon={require("../assets/icons/money2.png")}
-                iconSizeW={37}
-                iconSizeH={37}
-              />
-              <TotalCard
-                name={"T. diferencias"}
-                total={"-23.450"}
-                urlIcon={require("../assets/icons/money3.png")}
-                iconSizeW={37}
-                iconSizeH={37}
-              />
-            </View>
-            <Search search="Buscar local" urlImage={require("../assets/icons/optionsIcon.png")} />
+            </MotiView>
           </SafeAreaView>
         }
         secondChild={
-          <SafeAreaView>
+          <View>
             <Categories categories={categorias} onCategorySelect={handleCategorySelect} />
 
-            {/* Renderizar contenido específico según la categoría seleccionada */}
-            {categoriaSeleccionada && (
-              <View className="mx-4 mt-6 flex items-center">
-                <Text style={styles.categoryTitle}>
-                  {/* Información de {categoriaSeleccionada.nombre} */}
-                </Text>
-                <QuadratureCard />
-              </View>
-            )}
-          </SafeAreaView>
+            {selectedCategory && (selectedCategory.nombre === "Aperturas" ? <OpeningList /> : null)}
+          </View>
         }
       />
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  contentContainer: {
-    marginTop: 10,
-    paddingHorizontal: 10,
-  },
-  categoryTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-})

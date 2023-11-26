@@ -4,10 +4,14 @@ import { Image, Text, View } from "react-native"
 export default function TotalCard({ name, total, urlIcon, iconSizeH, iconSizeW }) {
   return (
     <View>
-      <View className="items-center h-[70] w-[92]  rounded-xl flex justify-center bg-white">
-        <Image className={`absolute -top-4`} style={{height: iconSizeH, width: iconSizeW}} source={urlIcon} />
-        <Text className="text-xs mt-4">{name}</Text>
-        <Text className="font-bold text-xs">{total}</Text>
+      <View className="flex h-[70] w-[92]  items-center justify-center rounded-xl bg-white">
+        <Image
+          className={`absolute -top-4`}
+          style={{ height: iconSizeH, width: iconSizeW }}
+          source={urlIcon}
+        />
+        <Text className="mt-4 text-xs">{name}</Text>
+        <Text className="text-xs font-bold">{total}</Text>
       </View>
     </View>
   )

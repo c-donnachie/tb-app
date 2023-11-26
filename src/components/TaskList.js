@@ -1,9 +1,10 @@
 import { useIsFocused } from "@react-navigation/native"
 import { MotiView, View } from "moti"
 import React, { useState } from "react"
-import { Dimensions, FlatList, RefreshControl, TextInput } from "react-native"
+import { Dimensions, FlatList, RefreshControl } from "react-native"
 import { deleteTask } from "../../api"
 import useTasks from "../hooks/useTasks"
+import Search from "./Search"
 import TaskItem from "./TaskItem"
 
 export default function TaskList() {
@@ -51,11 +52,12 @@ export default function TaskList() {
   return (
     <View className="w-full flex-1 items-center gap-4">
       <MotiView transition={{ duration: 600 }}>
-        <TextInput
-          className="w-40 rounded-lg bg-white p-2"
-          placeholder="Buscar"
+        <Search
+          search="Buscar"
           value={searchTerm}
           onChangeText={handleSearchRealTime}
+          urlImage={require("../assets/icons/optionsIcon.png")}
+          icon={true}
         />
       </MotiView>
       <FlatList
