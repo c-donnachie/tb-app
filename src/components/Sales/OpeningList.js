@@ -24,11 +24,11 @@ export default function OpeningList() {
     },
     {
       id: 3,
-      name: "Prat 2",
+      name: "Barrio Ingles 1",
       // start: "0",
       // sale: "0",
       // difference: "0",
-      localImage: require("../../assets/full.png"),
+      localImage: require("../../assets/barrioingles1.png"),
     },
     {
       id: 4,
@@ -37,12 +37,12 @@ export default function OpeningList() {
       start: "27.540",
       sale: "0",
       difference: "0",
-      localImage: require("../../assets/full.png"),
+      localImage: require("../../assets/massman.png"),
     },
   ]
 
   return (
-    <ScrollView className="mb-28 mt-2 flex h-screen w-screen" showsVerticalScrollIndicator={true}>
+    <ScrollView className="mb-28 mt-2 flex h-screen w-screen" showsVerticalScrollIndicator={false}>
       <SafeAreaView className="mb-80 flex items-center">
         {locales.map((local) => (
           <View key={local.id}>

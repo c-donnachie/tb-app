@@ -1,7 +1,14 @@
 import React from "react"
 import { Image, Text, TextInput, TouchableOpacity, View } from "react-native"
 
-export default function Search({ search = "sin texto", urlImage, value, onChangeText, icon }) {
+export default function Search({
+  search = "sin texto",
+  urlImage,
+  value,
+  onChangeText,
+  icon,
+  onPress,
+}) {
   const deleteSearchTerm = () => {
     onChangeText("")
   }
@@ -15,8 +22,11 @@ export default function Search({ search = "sin texto", urlImage, value, onChange
           icon ? "block" : "hidden"
         }`}
       >
-        <Image className={`h-6 w-6`} source={urlImage} icon={icon} />
+        <TouchableOpacity className="h-[46] w-[46] items-center justify-center" onPress={onPress}>
+          <Image className={`h-6 w-6`} source={urlImage} icon={icon} />
+        </TouchableOpacity>
       </View>
+
       <Image
         className={`-mt-1 inline h-6 w-6 transition duration-300`}
         source={require("../assets/icons/searchIcon.png")}

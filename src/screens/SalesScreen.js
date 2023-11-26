@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react"
 import { SafeAreaView, View } from "react-native"
 import Categories from "../components/Categories"
 import LayoutFull from "../components/LayoutFull"
+import { OptionsModal } from "../components/OptionsModal"
 import OpeningList from "../components/Sales/OpeningList"
 import TotalCard from "../components/Sales/TotalCard"
 import Search from "../components/Search"
@@ -14,6 +15,15 @@ export default function SalesScreen() {
   const [searchTerm, setSearchTerm] = useState("")
   const [sizeScreen, setSizeScreen] = useState("24%")
   const [layoutFullKey, setLayoutFullKey] = useState(0)
+  const [modalVisible, setModalVisible] = useState(false)
+
+  const openModal = () => {
+    setModalVisible(true)
+  }
+
+  const closeModal = () => {
+    setModalVisible(false)
+  }
 
   const handleSearchRealTime = (text) => {
     setSearchTerm(text)
@@ -126,6 +136,7 @@ export default function SalesScreen() {
                 icon={true}
                 value={searchTerm}
                 onChangeText={handleSearchRealTime}
+                onPress={openModal}
               />
             </MotiView>
           </SafeAreaView>
@@ -138,6 +149,7 @@ export default function SalesScreen() {
           </View>
         }
       />
+      <OptionsModal visible={modalVisible} onClose={closeModal} />
     </View>
   )
 }
