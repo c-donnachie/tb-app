@@ -1,0 +1,22 @@
+const tb_locales = [
+  {
+    id: 1,
+    id_local: "ABC123",
+    sigla: "SIG123",
+    siglaMaestro: "SIG_MASTER",
+    alias: "Local1",
+    comercial: "Nombre Comercial",
+    giro: "Giro1",
+    giro2: "Giro2",
+    giro3: "Giro3",
+    rut: "123456789",
+    region: "Región Metropolitana",
+    comuna: "Santiago",
+    ubicacion: "Latitud: 123, Longitud: 456",
+    direccion: "Calle Principal 123",
+    correo: "correo@example.com",
+    telefono: "123456789",
+    franquicia: "Franquicia1",
+    tipo: "Tipo1",
+  },
+]

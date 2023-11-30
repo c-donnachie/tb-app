@@ -1,58 +1,45 @@
-import React from "react"
+import React, { useState, useEffect } from "react"
 import { SafeAreaView, ScrollView, View } from "react-native"
 import OpeningItem from "./OpeningItem"
+import { preCierres } from "../../mocks/preCierres"
 
-export default function OpeningList() {
-  const locales = [
-    {
-      id: 1,
-      name: "Full Tecnobox",
-      openHour: "8:59",
-      start: "26.940",
-      sale: "0",
-      difference: "+10",
-      localImage: require("../../assets/full.png"),
-    },
-    {
-      id: 2,
-      name: "Prat 1",
-      openHour: "8:59",
-      start: "34.230",
-      sale: "0",
-      difference: "0",
-      localImage: require("../../assets/prat1.png"),
-    },
-    {
-      id: 3,
-      name: "Barrio Ingles 1",
-      // start: "0",
-      // sale: "0",
-      // difference: "0",
-      localImage: require("../../assets/barrioingles1.png"),
-    },
-    {
-      id: 4,
-      name: "Massman",
-      openHour: "8:59",
-      start: "27.540",
-      sale: "0",
-      difference: "0",
-      localImage: require("../../assets/massman.png"),
-    },
-  ]
+export default function OpeningList({ onPressItem, searchTerm }) {
+  const [filteredApertura, setFilteredApertura] = useState([])
+
+  const apertura = preCierres
+
+  useEffect(() => {
+    if (searchTerm === "") {
+      setFilteredApertura(apertura)
+    } else {
+      const searchTermsArray = searchTerm.trim().toLowerCase().split(/\s+/)
+
+      const filteredItems = apertura.filter((item) => {
+        return (
+          item.nombre !== undefined &&
+          searchTermsArray.some((term) =>
+            item.nombre.replace(/\s+/g, "").toLowerCase().includes(term)
+          )
+        )
+      })
+
+      setFilteredApertura(filteredItems)
+    }
+  }, [searchTerm, apertura])
 
   return (
     <ScrollView className="mb-28 mt-2 flex h-screen w-screen" showsVerticalScrollIndicator={false}>
       <SafeAreaView className="mb-80 flex items-center">
-        {locales.map((local) => (
-          <View key={local.id}>
+        {filteredApertura.map((item) => (
+          <View key={item.id}>
             <OpeningItem
-              localName={local.name}
-              hour={local.openHour}
-              start={local.start}
-              sale={local.sale}
-              difference={local.difference}
-              localImage={local.localImage}
+              localName={item.nombre}
+              hour={item.hora}
+              start={item.inicio}
+              sale={item.totalVenta}
+              difference={item.TotalDiferencia}
+              localImage={item.imagen}
+              onPress={() => onPressItem(item)}
             />
           </View>
         ))}

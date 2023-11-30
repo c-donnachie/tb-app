@@ -1,12 +1,24 @@
 import { motify } from "moti"
-import React, { useEffect, useState } from "react"
-import { SafeAreaView, View } from "react-native"
+import React, { useEffect, useState, useRef, useCallback } from "react"
+import {
+  SafeAreaView,
+  View,
+  useWindowDimensions,
+  Text,
+  TouchableOpacity,
+  Switch,
+  Image,
+} from "react-native"
 import Categories from "../components/Categories"
 import LayoutFull from "../components/LayoutFull"
 import { OptionsModal } from "../components/OptionsModal"
 import OpeningList from "../components/Sales/OpeningList"
-import TotalCard from "../components/Sales/TotalCard"
 import Search from "../components/Search"
+import MyBottomSheet from "../components/MyBottomSheet"
+import { GestureHandlerRootView } from "react-native-gesture-handler"
+import RenderTotalSales from "../components/Sales/RenderTotalSales"
+import OptionsModalSales from "../components/Sales/OptionsModalSales"
+import OpeningBottomSheet from "../components/Sales/salesBottomSheet/OpeningBottomSheet"
 
 const MotiView = motify(View)()
 
@@ -16,6 +28,11 @@ export default function SalesScreen() {
   const [sizeScreen, setSizeScreen] = useState("24%")
   const [layoutFullKey, setLayoutFullKey] = useState(0)
   const [modalVisible, setModalVisible] = useState(false)
+  const [isEnabled, setIsEnabled] = useState(false)
+
+  const toggleSwitch = () => {
+    setIsEnabled((previousState) => !previousState)
+  }
 
   const openModal = () => {
     setModalVisible(true)
@@ -29,27 +46,6 @@ export default function SalesScreen() {
     setSearchTerm(text)
   }
 
-  ventas = [
-    {
-      id: 1,
-      name: "Total ventas",
-      value: "50.434.430K",
-      icon: require("../assets/icons/money1.png"),
-    },
-    {
-      id: 2,
-      name: "Total entregas",
-      value: "32.452K",
-      icon: require("../assets/icons/money2.png"),
-    },
-    {
-      id: 3,
-      name: "T. diferencia",
-      value: "-23.450",
-      icon: require("../assets/icons/money3.png"),
-    },
-  ]
-
   const categorias = [
     {
       id: 1,
@@ -57,18 +53,14 @@ export default function SalesScreen() {
     },
     {
       id: 2,
-      nombre: "Cierres",
+      nombre: "Ventas",
     },
     {
       id: 3,
-      nombre: "Total Mes",
+      nombre: "Cierres",
     },
     {
       id: 4,
-      nombre: "Total Mes",
-    },
-    {
-      id: 5,
       nombre: "Total Mes",
     },
   ]
@@ -85,12 +77,6 @@ export default function SalesScreen() {
     }
   }, [selectedCategory, categorias])
 
-  const imagePaths = {
-    1: { path: require("../assets/icons/money1.png"), width: 37, height: 37 },
-    2: { path: require("../assets/icons/money2.png"), width: 37, height: 37 },
-    3: { path: require("../assets/icons/money3.png"), width: 36.11, height: 32.5 },
-  }
-
   const ChangeScreen = () => {
     if (sizeScreen === "24%") {
       setSizeScreen("8%")
@@ -103,32 +89,38 @@ export default function SalesScreen() {
     setLayoutFullKey((prevKey) => prevKey + 1)
   }
 
+  const bottomSheetRef = useRef(null)
+  const { height } = useWindowDimensions()
+
+  const pressHandle = useCallback(() => {
+    bottomSheetRef.current.expand()
+  }, [])
+
+  const closeHandle = useCallback(() => {
+    bottomSheetRef.current.close()
+  }, [])
+
+  const [selectedItem, setSelectedItem] = useState()
+
+  const handleOpeningListItemPress = (item) => {
+    setSelectedItem(item)
+    pressHandle()
+  }
+
   return (
-    <View>
+    <GestureHandlerRootView style={{ flex: 1, backgroundColor: "black" }}>
       <LayoutFull
         height={sizeScreen}
         sizeButton={ChangeScreen}
         firstChild={
-          <SafeAreaView>
+          <SafeAreaView className="">
             <MotiView transition={{ duration: 100 }}>
               <View
                 className={`mt-1 flex flex-row items-center justify-evenly py-4 ${
                   sizeScreen === "8%" ? "mt-20" : ""
                 }`}
               >
-                {ventas.map((item) => {
-                  return (
-                    <View key={item.id}>
-                      <TotalCard
-                        name={item.name}
-                        total={item.value}
-                        urlIcon={imagePaths[item.id].path}
-                        iconSizeW={imagePaths[item.id].width}
-                        iconSizeH={imagePaths[item.id].height}
-                      />
-                    </View>
-                  )
-                })}
+                <RenderTotalSales />
               </View>
               <Search
                 search="Buscar local..."
@@ -145,11 +137,42 @@ export default function SalesScreen() {
           <View>
             <Categories categories={categorias} onCategorySelect={handleCategorySelect} />
 
-            {selectedCategory && (selectedCategory.nombre === "Aperturas" ? <OpeningList /> : null)}
+            {selectedCategory &&
+              (selectedCategory.nombre === "Aperturas" ? (
+                <OpeningList onPressItem={handleOpeningListItemPress} searchTerm={searchTerm} />
+              ) : null)}
           </View>
         }
       />
-      <OptionsModal visible={modalVisible} onClose={closeModal} />
-    </View>
+
+      <MyBottomSheet
+        activeHeight={height * 0.5}
+        ref={bottomSheetRef}
+        backDropColor="black"
+        backgroundColor="white"
+      >
+        {selectedItem && (
+          <>
+            <OpeningBottomSheet data={selectedItem} />
+          </>
+        )}
+      </MyBottomSheet>
+
+      <OptionsModal visible={modalVisible} onClose={closeModal}>
+        {/* Container */}
+        <View className="flex items-center">
+          {/* Columna 1 */}
+          <View className="flex">
+            <Text>Solo mis locales</Text>
+            <Switch />
+          </View>
+        </View>
+      </OptionsModal>
+    </GestureHandlerRootView>
   )
+}
+{
+  /* <TouchableOpacity className="tm-8 absolute pl-80" onPress={closeHandle}>
+  <Text className="text-2xl font-semibold text-gray-400">X</Text>
+</TouchableOpacity> */
 }
