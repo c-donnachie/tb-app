@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { Text, TextInput, TouchableOpacity } from "react-native"
 import { getTask, saveTask, updateTask } from "../../api"
-import Layout from "../components/Layout"
+import Layout from "../layouts/Layout"
 
 export default function TaskFormScreen({ navigation, route }) {
   const [task, setTask] = useState({

@@ -29,7 +29,7 @@ export default function Search({
 
       <Image
         className={`-mt-1 inline h-6 w-6 transition duration-300`}
-        source={require("../assets/icons/searchIcon.png")}
+        source={require("../../assets/icons/searchIcon.png")}
       />
       <TextInput
         className="mx-2 h-[58]  w-[240] self-start rounded-2xl text-[#989898]"

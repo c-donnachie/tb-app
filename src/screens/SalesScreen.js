@@ -9,11 +9,11 @@ import {
   Switch,
   Image,
 } from "react-native"
-import Categories from "../components/Categories"
-import LayoutFull from "../components/LayoutFull"
+import Categories from "../components/Categories/Categories"
+import LayoutFull from "../layouts/LayoutFull"
 import { OptionsModal } from "../components/OptionsModal"
 import OpeningList from "../components/Sales/OpeningList"
-import Search from "../components/Search"
+import Search from "../components/Search/Search"
 import MyBottomSheet from "../components/MyBottomSheet"
 import { GestureHandlerRootView } from "react-native-gesture-handler"
 import RenderTotalSales from "../components/Sales/RenderTotalSales"

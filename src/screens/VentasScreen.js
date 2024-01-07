@@ -1,8 +1,8 @@
 import { LinearGradient } from "expo-linear-gradient"
 import React, { useState } from "react"
 import { StatusBar, StyleSheet, Text, View } from "react-native"
-import Categories from "../components/Categories"
-import Search from "../components/Search"
+import Categories from "../components/Categories/Categories"
+import Search from "../components/Search/Search"
 
 const VentasScreen = () => {
     const categorias = [

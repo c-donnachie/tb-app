@@ -2,10 +2,10 @@ import { useIsFocused } from "@react-navigation/native"
 import { MotiView, View } from "moti"
 import React, { useState } from "react"
 import { Dimensions, FlatList, RefreshControl } from "react-native"
-import { deleteTask } from "../../api"
-import useTasks from "../hooks/useTasks"
-import Search from "./Search"
-import TaskItem from "./TaskItem"
+import { deleteTask } from "../../../api"
+import useTasks from "../../hooks/useTasks"
+import Search from "../Search/Search"
+import TaskItem from "../TaksItem/TaskItem"
 
 export default function TaskList() {
   const [refreshing, setRefreshing] = useState(false)
@@ -56,7 +56,7 @@ export default function TaskList() {
           search="Buscar"
           value={searchTerm}
           onChangeText={handleSearchRealTime}
-          urlImage={require("../assets/icons/optionsIcon.png")}
+          urlImage={require("../../assets/icons/optionsIcon.png")}
           icon={true}
         />
       </MotiView>
